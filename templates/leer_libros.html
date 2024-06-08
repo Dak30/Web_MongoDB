@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/biblioteca.png') }}" type="image/x-icon">
+    <!-- CSS Personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <title>Biblioteca - Lista de Libros</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Libros</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for libro in libros %}
+                            <tr>
+                                <td>{{ libro.titulo }}</td>
+                                <td>{{ libro.autor }}</td>
+                                <td>
+                                    <!-- Botón de Actualizar -->
+                                    <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#actualizarLibroModal" data-titulo="{{ libro.titulo }}" data-autor="{{ libro.autor }}">Actualizar</button>
+                                    <!-- Botón de Eliminar -->
+                                    <form action="/eliminar_libro" method="post" style="display:inline;">
+                                        <input type="hidden" name="titulo" value="{{ libro.titulo }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Actualizar Libro -->
+        <div class="modal fade" id="actualizarLibroModal" tabindex="-1" role="dialog" aria-labelledby="actualizarLibroModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="actualizarLibroModalLabel">Actualizar Libro</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="actualizarLibroForm" action="/actualizar_libro" method="post">
+                            <div class="form-group">
+                                <label for="modalTitulo">Título Actual:</label>
+                                <input type="text" class="form-control" id="modalTitulo" name="titulo" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevoTitulo">Nuevo Título:</label>
+                                <input type="text" class="form-control" id="modalNuevoTitulo" name="nuevo_titulo">
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevoAutor">Nuevo Autor:</label>
+                                <input type="text" class="form-control" id="modalNuevoAutor" name="nuevo_autor">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Actualizar Libro</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <a href="/" class="btn btn-secondary">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#actualizarLibroModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var titulo = button.data('titulo'); // Extrae la información de los atributos data-*
+            var autor = button.data('autor');
+            
+            var modal = $(this);
+            modal.find('.modal-title').text('Actualizar Libro ' + titulo);
+            modal.find('.modal-body #modalTitulo').val(titulo);
+            modal.find('.modal-body #modalNuevoAutor').val(autor);
+        });
+    </script>
+</body>
+</html>

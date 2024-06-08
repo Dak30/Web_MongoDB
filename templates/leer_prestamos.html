@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/biblioteca.png') }}" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS Personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <title>Biblioteca - Leer Préstamos</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Préstamos</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Libro</th>
+                                <th>Fecha de Préstamo</th>
+                                <th>Fecha de Devolución</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prestamo in prestamos %}
+                            <tr>
+                                <td>{{ prestamo.usuario }}</td>
+                                <td>{{ prestamo.libro }}</td>
+                                <td>{{ prestamo.fecha_prestamo }}</td>
+                                <td>{{ prestamo.fecha_devolucion }}</td>
+                                <td>
+                                    <!-- Botón de Eliminar -->
+                                    <form action="/eliminar_prestamo" method="post" style="display:inline;">
+                                        <input type="hidden" name="usuario" value="{{ prestamo.usuario }}">
+                                        <input type="hidden" name="libro" value="{{ prestamo.libro }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <a href="/" class="btn btn-secondary">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

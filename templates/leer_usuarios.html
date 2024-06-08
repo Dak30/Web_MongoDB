@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/biblioteca.png') }}" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS Personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <title>Biblioteca - Leer Usuarios</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Usuarios</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios %}
+                            <tr>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.edad }}</td>
+                                <td>
+                                    <!-- Botón de Actualizar -->
+                                    <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#actualizarUsuarioModal" data-nombre="{{ usuario.nombre }}" data-edad="{{ usuario.edad }}">Actualizar</button>
+                                    <!-- Botón de Eliminar -->
+                                    <form action="/eliminar_usuario" method="post" style="display:inline;">
+                                        <input type="hidden" name="nombre" value="{{ usuario.nombre }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Actualizar Usuario -->
+        <div class="modal fade" id="actualizarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="actualizarUsuarioModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="actualizarUsuarioModalLabel">Actualizar Usuario</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="actualizarUsuarioForm" action="/actualizar_usuario" method="post">
+                            <div class="form-group">
+                                <label for="modalNombre">Nombre Actual:</label>
+                                <input type="text" class="form-control" id="modalNombre" name="nombre" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevoNombre">Nuevo Nombre:</label>
+                                <input type="text" class="form-control" id="modalNuevoNombre" name="nuevo_nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevaEdad">Nueva Edad:</label>
+                                <input type="number" class="form-control" id="modalNuevaEdad" name="edad">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <a href="/" class="btn btn-secondary">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#actualizarUsuarioModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var nombre = button.data('nombre'); // Extrae la información de los atributos data-*
+            var edad = button.data('edad');
+            
+            var modal = $(this);
+            modal.find('.modal-title').text('Actualizar Usuario ' + nombre);
+            modal.find('.modal-body #modalNombre').val(nombre);
+            modal.find('.modal-body #modalNuevaEdad').val(edad);
+        });
+    </script>
+</body>
+</html>

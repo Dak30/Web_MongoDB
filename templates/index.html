@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/biblioteca.png') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='js/alerts.js') }}">
+    <title>Biblioteca</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS Personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Biblioteca</h1>
+
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="true">Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="libros-tab" data-toggle="tab" href="#libros" role="tab" aria-controls="libros" aria-selected="false">Libros</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="prestamos-tab" data-toggle="tab" href="#prestamos" role="tab" aria-controls="prestamos" aria-selected="false">Préstamos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="sedes-tab" data-toggle="tab" href="#sedes" role="tab" aria-controls="sedes" aria-selected="false">Sedes</a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+
+            <!-- Usuarios -->
+            <div class="tab-pane fade show active" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <h2>Crear Usuario</h2>
+                        <form action="/crear_usuario" method="post">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edad">Edad:</label>
+                                <input type="number" class="form-control" id="edad" name="edad" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                        </form>
+                        <a href="/leer_usuarios" class="btn btn-secondary mt-2">Lista Usuarios</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Libros -->
+            <div class="tab-pane fade" id="libros" role="tabpanel" aria-labelledby="libros-tab">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <h2>Crear Libro</h2>
+                        <form action="/crear_libro" method="post">
+                            <div class="form-group">
+                                <label for="titulo">Título:</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="autor">Autor:</label>
+                                <input type="text" class="form-control" id="autor" name="autor" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Libro</button>
+                        </form>
+                        <a href="/leer_libros" class="btn btn-secondary mt-2">Lista Libros</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Préstamos -->
+            <div class="tab-pane fade" id="prestamos" role="tabpanel" aria-labelledby="prestamos-tab">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <h2>Crear Préstamo</h2>
+                        <form action="/crear_prestamo" method="post">
+                            <div class="form-group">
+                                <label for="usuario">Usuario:</label>
+                                <select class="form-control" id="usuario" name="usuario" required>
+                                    <option value="" selected disabled hidden>-- Seleccione un usuario --</option>
+                                    {% for usuario in usuarios %}
+                                        <option value="{{ usuario.nombre }}">{{ usuario.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="libro">Libro:</label>
+                                <select class="form-control" id="libro" name="libro" required>
+                                    <option value="" selected disabled hidden>-- Seleccione un libro --</option>
+                                    {% for libro in libros %}
+                                        <option value="{{ libro.titulo }}">{{ libro.titulo }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_prestamo">Fecha de Préstamo:</label>
+                                <input type="date" class="form-control" id="fecha_prestamo" name="fecha_prestamo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_devolucion">Fecha de Devolución:</label>
+                                <input type="date" class="form-control" id="fecha_devolucion" name="fecha_devolucion" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Préstamo</button>
+                        </form>
+                        <a href="/leer_prestamos" class="btn btn-secondary mt-2">Lista Préstamos</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sedes de Biblioteca -->
+            <div class="tab-pane fade" id="sedes" role="tabpanel" aria-labelledby="sedes-tab">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <h2>Crear Sede de Biblioteca</h2>
+                        <form action="/crear_sede" method="post">
+                            <div class="form-group">
+                                <label for="nombre">Nombre de la Sede:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ubicacion">Ubicación:</label>
+                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="titulo_libro">Título del Libro:</label>
+                                <select class="form-control" id="titulo_libro" name="titulo_libro" required>
+                                    <option value="" selected disabled hidden>-- Seleccione un libro --</option>
+                                    {% for libro in libros %}
+                                        <option value="{{ libro.titulo }}">{{ libro.titulo }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Sede de Biblioteca</button>
+                        </form>
+                        <a href="/leer_sedes" class="btn btn-secondary mt-2">Lista Sedes de Biblioteca</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

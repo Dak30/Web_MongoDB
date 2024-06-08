@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/biblioteca.png') }}" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS Personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <title>Biblioteca - Lista de Sedes</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Sedes de Biblioteca</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Ubicación</th>
+                                <th>Libro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sede in sedes %}
+                            <tr>
+                                <td>{{ sede.nombre }}</td>
+                                <td>{{ sede.ubicacion }}</td>
+                                <td>{{ sede.titulo_libro }}</td>
+                                <td>
+                                    <!-- Botón de Actualizar -->
+                                    <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#actualizarSedeModal" data-nombre="{{ sede.nombre }}" data-ubicacion="{{ sede.ubicacion }}" data-titulo_libro="{{ sede.titulo_libro }}">Actualizar</button>
+                                    <!-- Botón de Eliminar -->
+                                    <form action="/eliminar_sede" method="post" style="display:inline;">
+                                        <input type="hidden" name="nombre" value="{{ sede.nombre }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Actualizar Sede -->
+        <div class="modal fade" id="actualizarSedeModal" tabindex="-1" role="dialog" aria-labelledby="actualizarSedeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="actualizarSedeModalLabel">Actualizar Sede</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="actualizarSedeForm" action="/actualizar_sede" method="post">
+                            <div class="form-group">
+                                <label for="modalNombre">Nombre de Sede Actual:</label>
+                                <input type="text" class="form-control" id="modalNombre" name="nombre" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevaUbicacion">Nueva Ubicación:</label>
+                                <input type="text" class="form-control" id="modalNuevaUbicacion" name="nueva_ubicacion">
+                            </div>
+                            <div class="form-group">
+                                <label for="modalNuevoLibro">Nuevo Libro Existente:</label>
+                                <input type="text" class="form-control" id="modalNuevoLibro" name="nuevo_libro">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Actualizar Sede</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <a href="/" class="btn btn-secondary">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#actualizarSedeModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var nombre = button.data('nombre'); // Extrae la información de los atributos data-*
+            var ubicacion = button.data('ubicacion');
+            var titulo_libro = button.data('titulo_libro');
+            
+            var modal = $(this);
+            modal.find('.modal-title').text('Actualizar Sede ' + nombre);
+            modal.find('.modal-body #modalNombre').val(nombre);
+            modal.find('.modal-body #modalNuevaUbicacion').val(ubicacion);
+            modal.find('.modal-body #modalNuevoLibro').val(titulo_libro);
+        });
+    </script>
+</body>
+</html>
